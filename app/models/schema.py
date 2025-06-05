@@ -8,6 +8,9 @@ class SchemaType(str, Enum):
     AVRO = "avro"
     PROTOBUF = "protobuf"
     SQL_DDL = "sql_ddl"
+    BIGQUERY = "bigquery"
+    SNOWFLAKE = "snowflake"
+    REDSHIFT = "redshift"
 
 
 class SeverityLevel(str, Enum):
@@ -23,6 +26,8 @@ class Platform(str, Enum):
     PINOT = "pinot"
     MYSQL = "mysql"
     TIDB = "tidb"
+    BIGQUERY = "bigquery"
+    SNOWFLAKE = "snowflake"
 
 
 class SchemaValidationRequest(BaseModel):
