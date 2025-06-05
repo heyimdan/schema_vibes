@@ -7,6 +7,10 @@ services:
     plan: free
     autoDeploy: true
     healthCheckPath: /api/v1/health
+    disk:
+      name: schema-vibe-data
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
@@ -22,6 +26,8 @@ services:
         value: INFO
       - key: TOKENIZERS_PARALLELISM
         value: false
+      - key: CHROMA_PERSIST_DIRECTORY
+        value: /data/chroma_db
       # Critical: Set these in the Render dashboard for security
       - key: SCHEMA_VALIDATOR_MASTER_KEY
         sync: false  # Set manually in dashboard

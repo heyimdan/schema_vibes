@@ -5,10 +5,14 @@ from app.core.config import settings
 from app.models.schema import BestPractice, SchemaType, Platform
 from loguru import logger
 import json
+import os
 
 
 class VectorStoreService:
     def __init__(self):
+        # Ensure the persist directory exists
+        self._ensure_persist_directory()
+        
         self.client = chromadb.PersistentClient(
             path=settings.chroma_persist_directory,
             settings=ChromaSettings(
@@ -16,6 +20,26 @@ class VectorStoreService:
             )
         )
         self.collection = self._get_or_create_collection()
+    
+    def _ensure_persist_directory(self):
+        """Ensure the ChromaDB persistence directory exists."""
+        persist_dir = settings.chroma_persist_directory
+        
+        try:
+            # Create directory if it doesn't exist
+            os.makedirs(persist_dir, exist_ok=True)
+            
+            # Check if directory is writable
+            test_file = os.path.join(persist_dir, '.write_test')
+            with open(test_file, 'w') as f:
+                f.write('test')
+            os.remove(test_file)
+            
+            logger.info(f"ChromaDB persistence directory ready: {persist_dir}")
+            
+        except Exception as e:
+            logger.error(f"Failed to setup ChromaDB persistence directory {persist_dir}: {e}")
+            raise
     
     def _get_or_create_collection(self):
         """Get or create the best practices collection."""

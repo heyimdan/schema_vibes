@@ -1,6 +1,6 @@
 # 🚀 Deploy Schema Vibe Check to Render
 
-This guide will walk you through deploying your Schema Vibe Check application to Render.
+This guide will walk you through deploying your Schema Vibe Check application to Render with persistent storage.
 
 ## 📋 Prerequisites
 
@@ -160,6 +160,64 @@ If you encounter issues:
 2. Review application logs in the Render dashboard
 3. Verify all environment variables are correctly set
 4. Test the application locally first to isolate issues
+
+## 💾 Persistent Storage
+
+The application now uses **Render Disks** for persistent ChromaDB storage:
+
+- **Disk Name**: `schema-vibe-data`
+- **Mount Path**: `/data`
+- **Size**: 1GB (expandable)
+- **ChromaDB Path**: `/data/chroma_db`
+
+### Benefits:
+✅ **Persistent Best Practices**: Admin panel edits persist across deployments  
+✅ **Fast Restarts**: No need to re-populate initial data  
+✅ **Reliable Storage**: Data survives container restarts and redeploys  
+
+### Monitoring Storage:
+- Check disk usage in Render Dashboard → Your Service → Metrics
+- Upgrade disk size if needed (1GB should handle thousands of best practices)
+
+## 🛠️ Configuration Details
+
+### Environment Variables Explained:
+
+| Variable | Purpose | Example Value |
+|----------|---------|---------------|
+| `SCHEMA_VALIDATOR_MASTER_KEY` | Decrypts API keys | `1pfQUrO6gX...` |
+| `OPENAI_API_KEY` | Encrypted OpenAI key | `encrypted:Z0FBQ...` |
+| `ADMIN_PASSWORD` | Encrypted admin password | `encrypted:Z0FBQ...` |
+| `CHROMA_PERSIST_DIRECTORY` | Persistent storage path | `/data/chroma_db` |
+| `DEBUG` | Debug mode | `false` |
+| `AI_PROVIDER` | AI service provider | `openai` |
+| `GPT_MODEL` | OpenAI model | `gpt-4o-mini` |
+
+### Disk Configuration:
+```yaml
+disk:
+  name: schema-vibe-data
+  mountPath: /data
+  sizeGB: 1
+```
+
+## 🎯 Post-Deployment
+
+### 1. **Verify Deployment**
+```bash
+curl https://your-app.onrender.com/api/v1/health
+```
+
+### 2. **Test Persistence**
+- Go to `/admin`
+- Add a new best practice
+- Restart the service (Deploy → Manual Deploy)
+- Verify the practice persists
+
+### 3. **Monitor Performance**
+- Check response times in Render dashboard
+- Monitor disk usage
+- Review application logs
 
 ---
 

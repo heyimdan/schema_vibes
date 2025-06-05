@@ -21,11 +21,14 @@ COPY app/ ./app/
 COPY static/ ./static/
 
 # Create directories for data persistence
-RUN mkdir -p /app/chroma_db /app/logs
+RUN mkdir -p /app/chroma_db /app/logs /data/chroma_db
+
+# Ensure data directory has proper permissions
+RUN chmod 755 /data && chmod 755 /data/chroma_db
 
 # Set environment variables
 ENV PYTHONPATH=/app
-ENV CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+ENV CHROMA_PERSIST_DIRECTORY=/data/chroma_db
 
 # Expose port
 EXPOSE 8000
@@ -35,4 +38,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/api/v1/health || exit 1
 
 # Run the application
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 

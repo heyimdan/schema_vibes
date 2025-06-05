@@ -23,7 +23,8 @@ class Settings(BaseSettings):
     master_key: Optional[str] = None  # For encrypting/decrypting API keys
     
     # Vector Database Configuration
-    chroma_persist_directory: str = "./chroma_db"
+    # Use persistent disk mount point for Render, fallback to local for development
+    chroma_persist_directory: str = os.environ.get("CHROMA_PERSIST_DIRECTORY", "./chroma_db")
     collection_name: str = "schema_best_practices"
     
     # Database Configuration
