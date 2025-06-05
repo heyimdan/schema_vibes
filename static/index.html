@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Vibe Check - Data Infrastructure Console</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-database"></i>
+                    <h1>Schema Vibe Check</h1>
+                </div>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-details">
+                            <span class="user-name">Administrator</span>
+                            <span class="user-role">Schema Admin</span>
+                        </div>
+                        <div class="user-dropdown">
+                            <button class="dropdown-toggle" id="user-menu-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu" id="user-dropdown-menu">
+                                <a href="/static/admin.html" class="dropdown-item">
+                                    <i class="fas fa-cog"></i>
+                                    Admin Panel
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    Analytics
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Sign Out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="subtitle">AI-powered schema validation for your data infrastructure</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="form-group">
+                    <label for="platform-select" class="label">
+                        <i class="fas fa-server"></i>
+                        Data Platform
+                    </label>
+                    <select id="platform-select" class="select">
+                        <option value="">Select your data platform...</option>
+                        <option value="venice">Venice</option>
+                        <option value="espresso">Espresso</option>
+                        <option value="kafka">Kafka</option>
+                        <option value="pinot">Pinot</option>
+                        <option value="mysql">MySQL</option>
+                        <option value="tidb">TiDB</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schema-type" class="label">
+                        <i class="fas fa-code"></i>
+                        Schema Type
+                    </label>
+                    <select id="schema-type" class="select">
+                        <option value="">Select schema type...</option>
+                        <option value="sql_ddl" data-platforms="mysql,tidb">SQL DDL</option>
+                        <option value="json_schema" data-platforms="kafka,pinot">JSON Schema</option>
+                        <option value="avro" data-platforms="venice,espresso,kafka">Avro</option>
+                        <option value="protobuf" data-platforms="kafka">Protocol Buffers</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schema-input" class="label">
+                        <i class="fas fa-file-code"></i>
+                        Schema Content
+                    </label>
+                    <textarea 
+                        id="schema-input" 
+                        class="textarea" 
+                        placeholder="Paste your schema here...
+
+Example Avro (Venice/Espresso/Kafka):
+{
+  &quot;type&quot;: &quot;record&quot;,
+  &quot;name&quot;: &quot;UserEvent&quot;,
+  &quot;fields&quot;: [
+    {&quot;name&quot;: &quot;userId&quot;, &quot;type&quot;: &quot;long&quot;},
+    {&quot;name&quot;: &quot;eventType&quot;, &quot;type&quot;: &quot;string&quot;}
+  ]
+}
+
+Example SQL DDL (MySQL/TiDB):
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="context-input" class="label">
+                        <i class="fas fa-info-circle"></i>
+                        Context (Optional)
+                    </label>
+                    <input 
+                        type="text" 
+                        id="context-input" 
+                        class="input" 
+                        placeholder="e.g., User management table, Product catalog, Event tracking..."
+                    >
+                </div>
+
+                <button id="validate-btn" class="validate-btn">
+                    <i class="fas fa-check-circle"></i>
+                    Validate Schema
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-line"></i> Validation Results</h2>
+                    <div id="overall-score" class="score-badge"></div>
+                </div>
+                
+                <div id="results-content" class="results-content">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Analyzing your schema with AI...</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Data Infrastructure Console - Schema Vibe Check</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html> 

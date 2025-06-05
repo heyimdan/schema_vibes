@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  schema-validator:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Master key for decrypting API keys (CRITICAL - STORE SECURELY!)
+      # This should be set via Docker secrets or external secret management
+      - SCHEMA_VALIDATOR_MASTER_KEY=${SCHEMA_VALIDATOR_MASTER_KEY}
+      
+      # Encrypted API Keys (safe to store in configuration)
+      - OPENAI_API_KEY=${ENCRYPTED_OPENAI_API_KEY}
+      
+      # Application Configuration
+      - AI_PROVIDER=openai
+      - GPT_MODEL=gpt-4o-mini
+      - DEBUG=false
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      
+      # Database Configuration
+      - CHROMA_PERSIST_DIRECTORY=./chroma_db
+      - DATABASE_URL=sqlite:///./data/schema_validator.db
+      
+      # Logging
+      - LOG_LEVEL=INFO
+    
+    volumes:
+      # Persist vector database and SQLite database
+      - schema_data:/app/chroma_db
+      - schema_db:/app/data
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl:ro
+    depends_on:
+      - schema-validator
+    restart: unless-stopped
+    profiles:
+      - with-nginx
+
+volumes:
+  schema_data:
+    driver: local
+  schema_db:
+    driver: local 

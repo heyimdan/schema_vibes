@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Schema Vibe Check</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="login-container" class="login-container" style="display: none;">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Admin Access</h2>
+                </div>
+                <p>Enter your password to access the admin panel</p>
+            </div>
+            
+            <form id="login-form" action="/api/v1/auth/login" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Enter admin password">
+                </div>
+                
+                <div id="login-error" class="error-message" style="display: none;">
+                    Invalid password. Please try again.
+                </div>
+                
+                <button type="submit" class="btn btn-primary login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <a href="/" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Schema Vibe Check
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-container" class="admin-container" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Admin Panel</h2>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    Dashboard
+                </a>
+                <a href="#best-practices" class="nav-item" data-section="best-practices">
+                    <i class="fas fa-list-check"></i>
+                    Best Practices
+                </a>
+                <a href="#add-practice" class="nav-item" data-section="add-practice">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Practice
+                </a>
+                <a href="#analytics" class="nav-item" data-section="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </a>
+                <a href="/" class="nav-item">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to App
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <button id="refresh-btn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrator</span>
+                    </div>
+                    <button id="logout-btn" class="btn btn-secondary logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-practices">-</h3>
+                            <p>Total Best Practices</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="schema-types-count">-</h3>
+                            <p>Schema Types</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="ai-status">-</h3>
+                            <p>AI Service</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="platform-count">-</h3>
+                            <p>Platform Coverage</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <div class="config-card">
+                        <h3><i class="fas fa-robot"></i> AI Model Configuration</h3>
+                        <div class="config-content">
+                            <div class="form-group">
+                                <label for="gpt-model-select">GPT Model:</label>
+                                <select id="gpt-model-select" class="config-select">
+                                    <option value="gpt-4o-mini">GPT-4o Mini (Default)</option>
+                                    <option value="gpt-4o">GPT-4o</option>
+                                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                </select>
+                            </div>
+                            <button id="update-model-btn" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Update Model
+                            </button>
+                            <div id="model-status" class="config-status">
+                                Current Model: <span id="current-model">gpt-4o-mini</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-card">
+                        <h3>Best Practices by Category</h3>
+                        <div id="category-chart" class="chart-placeholder">
+                            Loading...
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Platform Distribution</h3>
+                        <div id="platform-chart" class="chart-placeholder">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Best Practices Section -->
+            <section id="best-practices-section" class="content-section">
+                <div class="section-header">
+                    <h2>Manage Best Practices</h2>
+                    <div class="filter-controls">
+                        <select id="filter-schema-type" class="filter-select">
+                            <option value="">All Schema Types</option>
+                        </select>
+                        <select id="filter-platform" class="filter-select">
+                            <option value="">All Platforms</option>
+                        </select>
+                        <select id="filter-category" class="filter-select">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="practices-table-container">
+                    <table id="practices-table" class="practices-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Schema Types</th>
+                                <th>Platforms</th>
+                                <th>Severity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="practices-tbody">
+                            <!-- Practices will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Add Practice Section -->
+            <section id="add-practice-section" class="content-section">
+                <div class="form-container">
+                    <h2>Add New Best Practice</h2>
+                    <form id="add-practice-form" class="practice-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="practice-id">Practice ID *</label>
+                                <input type="text" id="practice-id" name="id" required 
+                                       placeholder="e.g., naming_003">
+                            </div>
+                            <div class="form-group">
+                                <label for="practice-title">Title *</label>
+                                <input type="text" id="practice-title" name="title" required 
+                                       placeholder="e.g., Use Consistent Field Naming">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="practice-description">Description *</label>
+                            <textarea id="practice-description" name="description" required rows="3"
+                                      placeholder="Detailed description of the best practice..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="practice-category">Category *</label>
+                                <input type="text" id="practice-category" name="category" required 
+                                       placeholder="e.g., naming, security, performance">
+                            </div>
+                            <div class="form-group">
+                                <label for="practice-severity">Severity *</label>
+                                <select id="practice-severity" name="severity" required>
+                                    <option value="">Select Severity</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="practice-schema-types">Applicable Schema Types *</label>
+                                <div id="schema-types-checkboxes" class="checkbox-group">
+                                    <!-- Schema type checkboxes will be populated -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="practice-platforms">Applicable Platforms</label>
+                                <div id="platforms-checkboxes" class="checkbox-group">
+                                    <!-- Platform checkboxes will be populated -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="practice-examples">Examples (one per line)</label>
+                            <textarea id="practice-examples" name="examples" rows="4"
+                                      placeholder="Good: Use descriptive field names like user_email&#10;Bad: Use abbreviations like usr_eml"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="clear-form-btn" class="btn btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Clear
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Practice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Most Common Categories</h3>
+                        <div id="category-analytics" class="analytics-content">
+                            Loading...
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Severity Distribution</h3>
+                        <div id="severity-analytics" class="analytics-content">
+                            Loading...
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Schema Type Coverage</h3>
+                        <div id="schema-coverage-analytics" class="analytics-content">
+                            Loading...
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Recent Activity</h3>
+                        <div id="activity-analytics" class="analytics-content">
+                            <p><i class="fas fa-info-circle"></i> Activity tracking not yet implemented</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Practice Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Best Practice</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-practice-form" class="practice-form">
+                    <!-- Form fields will be populated dynamically -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                <button type="submit" form="edit-practice-form" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Deletion</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this best practice?</p>
+                <p><strong id="delete-practice-title"></strong></p>
+                <p class="warning-text">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-delete">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html> 

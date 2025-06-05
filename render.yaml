@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: schema-vibe-check
+    runtime: python3
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.18
+      - key: DEBUG
+        value: false
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: AI_PROVIDER
+        value: openai
+      - key: GPT_MODEL
+        value: gpt-4o-mini
+      - key: LOG_LEVEL
+        value: INFO
+      - key: TOKENIZERS_PARALLELISM
+        value: false
+      # Critical: Set these in the Render dashboard for security
+      - key: SCHEMA_VALIDATOR_MASTER_KEY
+        sync: false  # Set manually in dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Set manually in dashboard (encrypted value)
+      - key: ADMIN_PASSWORD
+        sync: false  # Set manually in dashboard (encrypted value) 
