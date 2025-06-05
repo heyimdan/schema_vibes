@@ -729,8 +729,8 @@ class AdminPanel {
                 </div>
             </div>
             <div class="form-group">
-                <label for="edit-practice-examples">Examples (one per line)</label>
-                <textarea id="edit-practice-examples" name="examples" rows="4">${examples.join('\n')}</textarea>
+                <label for="edit-practice-examples">Examples (separate with "---" on a new line)</label>
+                <textarea id="edit-practice-examples" name="examples" rows="6">${examples.join('\n---\n')}</textarea>
             </div>
         `;
 
@@ -826,7 +826,8 @@ class AdminPanel {
             severity_if_missing: formData.get('severity'),
             applicable_schema_types: formData.getAll('schema_types'),
             applicable_platforms: formData.getAll('platforms'),
-            examples: formData.get('examples') ? formData.get('examples').split('\n').filter(ex => ex.trim()) : []
+            examples: formData.get('examples') ? 
+                formData.get('examples').split('---').map(ex => ex.trim()).filter(ex => ex.length > 0) : []
         };
 
         return data;

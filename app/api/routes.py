@@ -9,7 +9,7 @@ from app.models.schema import (
 )
 from app.services.ai_service import AIService
 from app.services.vector_store import VectorStoreService
-from app.core.config import settings
+from app.core.config import settings, SUPPORTED_SCHEMA_TYPES
 from app.core.auth import auth_manager, require_admin_auth, is_authenticated
 from loguru import logger
 import hashlib
@@ -107,7 +107,7 @@ async def validate_schema_simple(
 @router.get("/schema-types")
 async def get_supported_schema_types() -> List[str]:
     """Get a list of all supported schema types."""
-    return [schema_type.value for schema_type in SchemaType]
+    return SUPPORTED_SCHEMA_TYPES
 
 
 # Authentication routes
