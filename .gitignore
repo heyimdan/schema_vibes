@@ -147,4 +147,4 @@ dmypy.json
 
 # Local configuration overrides
 local_settings.py
-local_config.py 
+local_config.py # Force redeploy Thu Jun  5 17:52:13 CDT 2025
