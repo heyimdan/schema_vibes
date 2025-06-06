@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     # Use persistent disk mount point for Render, fallback to local for development
     chroma_persist_directory: str = os.environ.get("CHROMA_PERSIST_DIRECTORY", "./chroma_db")
     collection_name: str = "schema_best_practices"
+    # Control whether to auto-populate default best practices (disable in production)
+    auto_populate_defaults: bool = os.environ.get("AUTO_POPULATE_DEFAULTS", "true").lower() == "true"
     
     # Database Configuration
     database_url: str = "sqlite:///./schema_validator.db"

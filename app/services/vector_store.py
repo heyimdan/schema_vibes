@@ -52,7 +52,13 @@ class VectorStoreService:
                 metadata={"description": "Schema validation best practices"}
             )
             logger.info(f"Created new collection: {settings.collection_name}")
-            self._populate_initial_best_practices(collection)
+            
+            # Only populate initial best practices if enabled (disabled in production)
+            if settings.auto_populate_defaults:
+                logger.info("Auto-populating default best practices (development mode)")
+                self._populate_initial_best_practices(collection)
+            else:
+                logger.info("Skipping auto-population of defaults (production mode)")
         
         return collection
     
